@@ -38,7 +38,7 @@ class Reaction extends Equatable {
   factory Reaction.fromJson(Map<String, dynamic> json) => _$ReactionFromJson(json);
 
   /// Reaction ID
-  @JsonKey(includeIfNull: false, includeToJson: false)
+  @JsonKey(includeIfNull: false)
   final String? id;
 
   /// The type of reaction (eg. like, comment, ...).
@@ -155,4 +155,6 @@ class Reaction extends Equatable {
 
   /// Serialize to json
   Map<String, dynamic> toJson() => _$ReactionToJson(this);
+
+
 }

@@ -8,6 +8,7 @@ enum _Filter {
   idLessThanOrEqual,
 
   idLessThan,
+  verb, // Add verb option
 }
 
 extension _FilterX on _Filter {
@@ -16,6 +17,7 @@ extension _FilterX on _Filter {
         _Filter.idGreaterThan: 'id_gt',
         _Filter.idLessThanOrEqual: 'id_lte',
         _Filter.idLessThan: 'id_lt',
+    _Filter.verb: 'verb',
       }[this]!;
 }
 
@@ -29,7 +31,7 @@ extension _FilterX on _Filter {
 ///  in ascending order.
 /// {@endtemplate}
 class Filter extends Equatable {
-  final Map<_Filter, String> _filters = {};
+  final Map<_Filter, dynamic> _filters = {};
 
   /// Serialize [Filter] parameters
   Map<String, String> get params => _filters.map((key, value) => MapEntry(key.name, value));
@@ -65,4 +67,10 @@ class Filter extends Equatable {
 
   @override
   List<Object?> get props => [_filters];
+  // Add method to filter by multiple verbs without altering existing code
+  // Update method to filter by multiple verbs
+  Filter verb(String verbs) {
+    _filters[_Filter.verb] = verbs;
+    return this;
+  }
 }

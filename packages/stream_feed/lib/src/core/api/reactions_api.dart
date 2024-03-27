@@ -24,6 +24,9 @@ class ReactionsAPI {
     }
     checkNotNull(reaction.kind, "Reaction kind can't be null");
     checkArgument(reaction.kind!.isNotEmpty, "Reaction kind can't be empty");
+
+
+
     final result = await _client.post<Map<String, dynamic>>(
       Routes.buildReactionsUrl(),
       headers: {'Authorization': '$token'},

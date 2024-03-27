@@ -220,25 +220,25 @@ Future<void> main() async {
   );
 
   final tweet = await user1.addActivity(activity);
-
-  // add a like reaction to the activity with id activityId
-  await clientWithSecret.reactions.add('like', tweet.id!, userId: 'userId');
-
-// adds a comment reaction to the activity with id activityId
-  await clientWithSecret.reactions.add('comment', tweet.id!,
-      data: {'text': 'awesome post!'}, userId: 'userId');
-
-// for server side auth, userId is required
-  final comment = await clientWithSecret.reactions.add('comment', tweet.id!,
-      data: {'text': 'awesome post!'}, userId: 'userId');
+//
+//   // add a like reaction to the activity with id activityId
+//   await clientWithSecret.reactions.add('like', tweet.id!, userId: 'userId');
+//
+// // adds a comment reaction to the activity with id activityId
+//   await clientWithSecret.reactions.add('comment', tweet.id!,
+//       data: {'text': 'awesome post!'}, userId: 'userId');
+//
+// // for server side auth, userId is required
+//   final comment = await clientWithSecret.reactions.add('comment', tweet.id!,
+//       data: {'text': 'awesome post!'}, userId: 'userId');
 
 // first let's read current user's timeline feed and pick one activity
   final activities =
       await clientWithSecret.flatFeed('user', '1').getActivities();
 
-// then let's add a like reaction to that activity
-  final otherLike = await clientWithSecret.reactions
-      .add('like', activities.first.id!, userId: 'userId');
+// // then let's add a like reaction to that activity
+//   final otherLike = await clientWithSecret.reactions
+//       .add('like', activities.first.id!, userId: 'userId');
 
 // retrieve all kind of reactions for an activity
   await clientWithSecret.reactions.filter(
@@ -274,16 +274,16 @@ Future<void> main() async {
 
 // adds a comment reaction to the activity and notifies Thierry's notification
 // feed
-  await clientWithSecret.reactions.add(
-      'comment', '5de5e4ba-add2-11eb-8529-0242ac130003',
-      data: {'text': '@thierry great post!'},
-      userId: 'userId',
-      targetFeeds: [FeedId.id('notification:thierry')]);
+//   await clientWithSecret.reactions.add(
+//       'comment', '5de5e4ba-add2-11eb-8529-0242ac130003',
+//       data: {'text': '@thierry great post!'},
+//       userId: 'userId',
+//       targetFeeds: [FeedId.id('notification:thierry')]);
 
   // adds a like to the previously created comment
-  await clientWithSecret.reactions
-      .addChild('like', comment.id!, userId: 'userId');
-  await clientWithSecret.reactions.delete(comment.id!);
+  // await clientWithSecret.reactions
+  //     .addChild('like', comment.id!, userId: 'userId');
+  // await clientWithSecret.reactions.delete(comment.id!);
 //Adding Collections
   // await client.collections.add(
   //   'food',

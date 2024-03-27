@@ -137,7 +137,7 @@ class MobileApp extends StatelessWidget {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            primary: const Color(0xff005fff),
+           // primary: const Color(0xff005fff),
           ),
         ),
       ),

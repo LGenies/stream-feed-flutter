@@ -30,13 +30,22 @@ class FlatFeed extends Feed {
 
   /// Retrieves one activity from a feed
   Future<Activity> getActivityDetail(String activityId) async {
-    final activities = await getActivities(limit: 1, filter: Filter().idLessThanOrEqual(activityId).idGreaterThanOrEqual(activityId));
+    final activities = await getActivities(
+        limit: 1,
+        filter: Filter()
+            .idLessThanOrEqual(activityId)
+            .idGreaterThanOrEqual(activityId));
     return activities.first;
   }
 
   /// Retrieves one enriched activity from a feed
-  Future<GenericEnrichedActivity<A, Ob, T, Or>> getEnrichedActivityDetail<A, Ob, T, Or>(String activityId) async {
-    final activities = await getEnrichedActivities<A, Ob, T, Or>(limit: 1, filter: Filter().idLessThanOrEqual(activityId).idGreaterThanOrEqual(activityId));
+  Future<GenericEnrichedActivity<A, Ob, T, Or>>
+      getEnrichedActivityDetail<A, Ob, T, Or>(String activityId) async {
+    final activities = await getEnrichedActivities<A, Ob, T, Or>(
+        limit: 1,
+        filter: Filter()
+            .idLessThanOrEqual(activityId)
+            .idGreaterThanOrEqual(activityId));
     return activities.first;
   }
 
@@ -64,9 +73,12 @@ class FlatFeed extends Feed {
       if (ranking != null) 'ranking': ranking,
       if (session != null) 'session': session,
     };
-    final token = userToken ?? TokenHelper.buildFeedToken(secret!, TokenAction.read, feedId);
+    final token = userToken ??
+        TokenHelper.buildFeedToken(secret!, TokenAction.read, feedId);
     final result = await feed.getActivities(token, feedId, options);
-    final data = (result.data!['results'] as List<Map<String, dynamic>?>).map(Activity.fromJson).toList(growable: false);
+    final data = (result.data!['results'] as List<dynamic>)
+        .map((item) => Activity.fromJson(item as Map<String, dynamic>))
+        .toList(growable: false);
     return data;
   }
 
@@ -92,7 +104,8 @@ class FlatFeed extends Feed {
   /// ```
   ///
   /// {@macro filter}
-  Future<List<GenericEnrichedActivity<A, Ob, T, Or>>> getEnrichedActivities<A, Ob, T, Or>({
+  Future<List<GenericEnrichedActivity<A, Ob, T, Or>>>
+      getEnrichedActivities<A, Ob, T, Or>({
     int? limit,
     int? offset,
     String? session,
@@ -109,10 +122,48 @@ class FlatFeed extends Feed {
       if (ranking != null) 'ranking': ranking,
       if (session != null) 'session': session,
     };
-    final token = userToken ?? TokenHelper.buildFeedToken(secret!, TokenAction.read, feedId);
+    final token = userToken ??
+        TokenHelper.buildFeedToken(secret!, TokenAction.read, feedId);
     final result = await feed.getEnrichedActivities(token, feedId, options);
-    final data = (result.data['results'] as List<Map<String, dynamic>?>).map(GenericEnrichedActivity<A, Ob, T, Or>.fromJson).toList(growable: false);
+    final data = (result.data['results'] as List<Map<String, dynamic>?>)
+        .map(GenericEnrichedActivity<A, Ob, T, Or>.fromJson)
+        .toList(growable: false);
     return data;
+  }
+
+  Future<List<GenericEnrichedActivity<A, Ob, T, Or>>>
+      getEnrichedActivitiesCustom<A, Ob, T, Or>({
+    int? limit,
+    int? offset,
+    String? session,
+    Filter? filter,
+    EnrichmentFlags? flags,
+    String? ranking, //TODO: no way to parameterized marker?
+  }) async {
+    final options = {
+      'limit': limit ?? Default.limit,
+      'offset': offset ?? Default.offset, //TODO:add session everywhere
+      ...filter?.params ?? Default.filter.params,
+      ...Default.marker.params,
+      if (flags != null) ...flags.params,
+      if (ranking != null) 'ranking': ranking,
+      if (session != null) 'session': session,
+    };
+    final token = userToken ??
+        TokenHelper.buildFeedToken(secret!, TokenAction.read, feedId);
+    final result = await feed.getEnrichedActivities(token, feedId, options);
+    //final data = (result.data['results'] as List<Map<String, dynamic>?>).map(GenericEnrichedActivity<A, Ob, T, Or>.fromJson).toList(growable: false);
+
+    final dynamic results = result.data['results'];
+
+    final data = results
+        .map((json) => GenericEnrichedActivity<A, Ob, T, Or>.fromJson(
+              json,
+              // Provide fromJson functions if needed
+            ))
+        .toList(growable: false);
+   final  genericEnrichedList = data.cast<GenericEnrichedActivity>();
+    return genericEnrichedList;
   }
 
   /// ```dart
@@ -121,7 +172,8 @@ class FlatFeed extends Feed {
   /// //parse next page
   /// await flatFeed.getPaginatedEnrichedActivities(limit: nextParams.limit,filter: nextParams.idLT);
   /// ```
-  Future<PaginatedActivities<A, Ob, T, Or>> getPaginatedEnrichedActivities<A, Ob, T, Or>({
+  Future<PaginatedActivities<A, Ob, T, Or>>
+      getPaginatedEnrichedActivities<A, Ob, T, Or>({
     int? limit,
     int? offset,
     String? session,
@@ -138,7 +190,8 @@ class FlatFeed extends Feed {
       if (ranking != null) 'ranking': ranking,
       if (session != null) 'session': session,
     };
-    final token = userToken ?? TokenHelper.buildFeedToken(secret!, TokenAction.read, feedId);
+    final token = userToken ??
+        TokenHelper.buildFeedToken(secret!, TokenAction.read, feedId);
     return feed.paginatedActivities(token, feedId, options);
   }
 
@@ -170,7 +223,9 @@ class FlatFeed extends Feed {
       if (ranking != null) 'ranking': ranking,
       if (session != null) 'session': session,
     };
-    final token = userToken ?? TokenHelper.buildAnyToken(secret!, TokenAction.any, userId: feedId.userId);
+    final token = userToken ??
+        TokenHelper.buildAnyToken(secret!, TokenAction.any,
+            userId: feedId.userId);
 
     return feed.personalizedFeed(token, options);
   }

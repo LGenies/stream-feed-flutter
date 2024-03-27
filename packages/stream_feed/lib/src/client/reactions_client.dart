@@ -58,20 +58,14 @@ class ReactionsClient {
   ///```
   ///
   /// API docs: [adding-reactions](https://getstream.io/activity-feeds/docs/flutter-dart/reactions_introduction/?language=dart#adding-reactions)
-  Future<Reaction> add(
-    String kind,
-    String activityId, {
-    String? userId,
-    Map<String, Object>? data,
-    List<FeedId>? targetFeeds,
-  }) {
-    final reaction = Reaction(
-      kind: kind,
-      activityId: activityId,
-      userId: userId,
-      data: data,
-      targetFeeds: targetFeeds,
-    );
+  Future<Reaction> add(Reaction reaction) {
+    // final reaction = Reaction(
+    //   kind: kind,
+    //   activityId: activityId,
+    //   userId: userId,
+    //   data: data,
+    //   targetFeeds: targetFeeds,
+    // );
     final token = userToken ?? TokenHelper.buildReactionToken(secret!, TokenAction.write);
     return _reactions.add(token, reaction);
   }
@@ -166,15 +160,10 @@ class ReactionsClient {
   /// );
   ///```
   Future<Reaction> update(
-    String reactionId, {
-    Map<String, Object>? data,
-    List<FeedId>? targetFeeds,
-  }) {
-    final reaction = Reaction(
-      id: reactionId,
-      data: data,
-      targetFeeds: targetFeeds,
-    );
+    String reactionId,
+        Reaction reaction,
+  ) {
+
     final token = userToken ?? TokenHelper.buildReactionToken(secret!, TokenAction.write);
     return _reactions.update(token, reaction);
   }

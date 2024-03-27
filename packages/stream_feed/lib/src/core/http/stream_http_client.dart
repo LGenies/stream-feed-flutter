@@ -116,6 +116,8 @@ class StreamHttpClient {
     OnReceiveProgress? onReceiveProgress,
     CancelToken? cancelToken,
   }) async {
+
+
     try {
       final response = await httpClient.post<T>(enrichUrl(path, serviceName),
           queryParameters: queryParameters?.nullProtected, data: data, options: Options(headers: headers?.nullProtected), onSendProgress: onSendProgress, onReceiveProgress: onReceiveProgress, cancelToken: cancelToken);
